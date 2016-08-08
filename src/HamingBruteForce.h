@@ -14,6 +14,8 @@ public:
 
     void match(const T *a, int i_a, int n_size_a, const T *b, int i_b, int n_size_b);
 
+    void match_all(const T *a, int n_size_a, const T *b, int n_size_b);
+
     static int hamming_distance(const T *a, const T *b, const int n);
 
     int n_size_reserve;
