@@ -1,9 +1,31 @@
 
 
 #include "Types.h"
-#include <stdint.h>
+#include "HamingBruteForce.h"
 
 
+
+
+
+
+template<typename T>
+void HamingBruteForce<T>::match_all(const T *a, int n_size_a, const T *b, int n_size_b) {
+    int ld = n_dim / 64;
+    for (int i = 0; i < n_size_a; i++) {
+        for (int j = 0; j < n_size_b; j++) {
+            int d_ab_0 = _popcnt64 (a[i * ld + 0] ^ b[j * ld + 0]);
+            int d_ab_1 = _popcnt64 (a[i * ld + 1] ^ b[j * ld + 1]);
+            int d_ab_2 = _popcnt64 (a[i * ld + 2] ^ b[j * ld + 2]);
+            int d_ab_3 = _popcnt64 (a[i * ld + 3] ^ b[j * ld + 3]);
+            int d_ab_4 = _popcnt64 (a[i * ld + 4] ^ b[j * ld + 4]);
+            
+            int d_ab = d_ab_0 + + d_ab_0 + d_ab_1 + d_ab_2 + d_ab_3 + d_ab_4 ;
+            int is_closer = d_ab < distance_ab[i];
+            index_ab[i] = is_closer ? j : index_ab[i];
+            distance_ab[i] = is_closer ? d_ab : distance_ab[i];
+        }
+    }
+}
 
 
 template<typename T>
@@ -31,7 +53,7 @@ void create_syntethic_data(Matrix<T> &a, int n_size_a, Matrix<T> &b, int n_size_
     // -> make 'b' column 30 similiar as 'a' column 4
     //std::copy(a.memptr(4), a.memptr(4) + n_dim/64, b.memptr(30));
     memcpy(b.memptr(30), a.memptr(4), n_dim/8);
-    b(0, 30) = ~a(0, 4);
+    b(0, 30) ^= a(0, 4);
 }
 
 static void ints2bits(int64_t &bits, int64_t *ints) {

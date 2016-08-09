@@ -2,7 +2,7 @@
 #include <random>
 #include "HamingBruteForce.h"
 #include "Timer.h"
-#include "create_synthethic_data.h"
+#include "MathKernels.h"
 #include "Types.h"
 
 typedef std::conditional<SIZE_BITS_HAMING == 32, int32_t, int64_t>::type type_haming;
