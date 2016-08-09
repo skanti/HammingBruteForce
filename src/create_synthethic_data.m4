@@ -1,5 +1,9 @@
 include(`./src/Unroll.m4')
 #include "Types.h"
+#include <stdint.h>
+
+define(intx_t,`ifelse(SIZE_BITS_HAMING,64, int64_t, int32_t)')
+define(intx_suffix,`ifelse(SIZE_BITS_HAMING,64, L,)')
 
 template<typename T>
 void create_syntethic_data(Matrix<T> &a, int n_size_a, Matrix<T> &b, int n_size_b, int n_dim) {
@@ -16,7 +20,7 @@ void create_syntethic_data(Matrix<T> &a, int n_size_a, Matrix<T> &b, int n_size_
     }
     for (int j = 0; j < n_size_b; j++) {
         for (int i = 0; i < n_dim; i++) {
-                tmp[i] = dist_binary(mt);
+            tmp[i] = dist_binary(mt);
         }
         for (int i = 0; i < n_dim/SIZE_BITS_HAMING; i++)
             ints2bits(b(i,j), &tmp[i*SIZE_BITS_HAMING]);
@@ -28,7 +32,7 @@ void create_syntethic_data(Matrix<T> &a, int n_size_a, Matrix<T> &b, int n_size_
     b(0, 30) = !a(0, 4);
 }
 
-static void ints2bits(int &bits, int *ints) {
+static void ints2bits(intx_t &bits, intx_t *ints) {
     bits = ints[0]
     forloop(i, 1, eval(SIZE_BITS_HAMING-1),
          + (ints[i] << i)
@@ -36,9 +40,9 @@ static void ints2bits(int &bits, int *ints) {
 }
 
 
-static void bits2ints(int &bits, int *ints) {
+static void bits2ints(intx_t &bits, intx_t *ints) {
     forloop(i, 0, eval(SIZE_BITS_HAMING-1),
-        ints[i] = (bits & (1<<i)) >> i;
+        ints[i] = (bits & (1intx_suffix <<i)) >> i;
     )
 }
 

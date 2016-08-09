@@ -5,7 +5,7 @@
 #include "create_synthethic_data.h"
 #include "Types.h"
 
-typedef int type_haming;
+typedef int64_t type_haming;
 
 extern "C" void match_all_ispc(const unsigned char *a, int n_size_a, const unsigned char *b, int n_size_b,
                                int n_dim, int *index_ab, int *distance_ab);

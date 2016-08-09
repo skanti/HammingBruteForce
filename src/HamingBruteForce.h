@@ -22,16 +22,15 @@ public:
 
     int n_size_reserve;
     int n_dim;
-    const int size_bit_haming = sizeof(T) * 8;
     int threshold;
     ivec index_ab;
     ivec distance_ab;
 };
 
 template
-class HamingBruteForce<unsigned char>;
+class HamingBruteForce<int32_t>;
 
 template
-class HamingBruteForce<int>;
+class HamingBruteForce<int64_t>;
 
 #endif
