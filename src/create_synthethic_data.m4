@@ -6,24 +6,37 @@ void create_syntethic_data(Matrix<T> &a, int n_size_a, Matrix<T> &b, int n_size_
 
     std::mt19937 mt(999);
     std::bernoulli_distribution dist_binary(0.5);
-    for (int j = 0; j < n_size_a; j++)
-        for (int i = 0; i < n_dim / SIZE_BIT_HAMING; i++)
-            a(i, j) = (dist_binary(mt) << 0) forloop(i, 1, eval(SIZE_BIT_HAMING-1), + ( dist_binary(mt) << i));
-
-    for (int j = 0; j < n_size_b; j++)
-        for (int i = 0; i < n_dim; i++)
-            b(i, j) = dist_binary(mt);
+    std::vector<T> tmp(n_dim);
+    for (int j = 0; j < n_size_a; j++) {
+        for (int i = 0; i < n_dim; i++) {
+            tmp[i] = dist_binary(mt);
+        }
+        for (int i = 0; i < n_dim/SIZE_BIT_HAMING; i++)
+            ints2bits(a(i,j), &tmp[i*SIZE_BIT_HAMING]);
+    }
+    for (int j = 0; j < n_size_b; j++) {
+        for (int i = 0; i < n_dim; i++) {
+                tmp[i] = dist_binary(mt);
+        }
+        for (int i = 0; i < n_dim/SIZE_BIT_HAMING; i++)
+            ints2bits(b(i,j), &tmp[i*SIZE_BIT_HAMING]);
+    }
 
 
     // -> make 'b' column 30 similiar as 'a' column 4
-    std::copy(a.memptr(4), a.memptr(4) + n_dim, b.memptr(30));
-    b(0, 30) = !a(0, 30);
-    b(50, 30) = !a(50, 30);
-    b(100, 30) = !a(100, 30);
-    b(200, 30) = !a(200, 30);
+    std::copy(a.memptr(4), a.memptr(4) + n_dim/SIZE_BIT_HAMING, b.memptr(30));
+    b(0, 30) = !a(0, 4);
 }
 
-void bits2ints(int &bits, int *ints) {
+static void ints2bits(int &bits, int *ints) {
+    bits = ints[0]
+    forloop(i, 1, eval(SIZE_BIT_HAMING-1),
+         + (ints[i] << i)
+    );
+}
+
+
+static void bits2ints(int &bits, int *ints) {
     forloop(i, 0, eval(SIZE_BIT_HAMING-1),
         ints[i] = (bits & (1<<i)) >> i;
     )

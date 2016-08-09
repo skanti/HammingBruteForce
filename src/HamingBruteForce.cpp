@@ -26,11 +26,12 @@ void HamingBruteForce<T>::match(const T *a, int i_a, int n_size_a, const T *b, i
 
 template<typename T>
 void HamingBruteForce<T>::match_all(const T *a, int n_size_a, const T *b, int n_size_b) {
+    int ld = n_dim / SIZE_BIT_HAMING;
     for (int i = 0; i < n_size_a; i++) {
         for (int j = 0; j < n_size_b; j++) {
             int d_ab = 0;
-            for (int k = 0; k < n_dim / SIZE_BIT_HAMING; k++)
-                d_ab += __builtin_popcount(a[i * n_dim + k] ^ b[j * n_dim + k]);
+            for (int k = 0; k < ld; k++)
+                d_ab += __builtin_popcount(a[i * ld + k] ^ b[j * ld + k]);
             int is_closer = d_ab < distance_ab[i];
             index_ab[i] = is_closer ? j : index_ab[i];
             distance_ab[i] = is_closer ? d_ab : distance_ab[i];

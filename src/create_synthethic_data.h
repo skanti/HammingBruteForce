@@ -7,24 +7,66 @@ void create_syntethic_data(Matrix<T> &a, int n_size_a, Matrix<T> &b, int n_size_
 
     std::mt19937 mt(999);
     std::bernoulli_distribution dist_binary(0.5);
-    for (int j = 0; j < n_size_a; j++)
-        for (int i = 0; i < n_dim / 32; i++)
-            a(i, j) = (dist_binary(mt) << 0) + ( dist_binary(mt) << 1)+ ( dist_binary(mt) << 2)+ ( dist_binary(mt) << 3)+ ( dist_binary(mt) << 4)+ ( dist_binary(mt) << 5)+ ( dist_binary(mt) << 6)+ ( dist_binary(mt) << 7)+ ( dist_binary(mt) << 8)+ ( dist_binary(mt) << 9)+ ( dist_binary(mt) << 10)+ ( dist_binary(mt) << 11)+ ( dist_binary(mt) << 12)+ ( dist_binary(mt) << 13)+ ( dist_binary(mt) << 14)+ ( dist_binary(mt) << 15)+ ( dist_binary(mt) << 16)+ ( dist_binary(mt) << 17)+ ( dist_binary(mt) << 18)+ ( dist_binary(mt) << 19)+ ( dist_binary(mt) << 20)+ ( dist_binary(mt) << 21)+ ( dist_binary(mt) << 22)+ ( dist_binary(mt) << 23)+ ( dist_binary(mt) << 24)+ ( dist_binary(mt) << 25)+ ( dist_binary(mt) << 26)+ ( dist_binary(mt) << 27)+ ( dist_binary(mt) << 28)+ ( dist_binary(mt) << 29)+ ( dist_binary(mt) << 30)+ ( dist_binary(mt) << 31);
-
-    for (int j = 0; j < n_size_b; j++)
-        for (int i = 0; i < n_dim; i++)
-            b(i, j) = dist_binary(mt);
+    std::vector<T> tmp(n_dim);
+    for (int j = 0; j < n_size_a; j++) {
+        for (int i = 0; i < n_dim; i++) {
+            tmp[i] = dist_binary(mt);
+        }
+        for (int i = 0; i < n_dim/32; i++)
+            ints2bits(a(i,j), &tmp[i*32]);
+    }
+    for (int j = 0; j < n_size_b; j++) {
+        for (int i = 0; i < n_dim; i++) {
+                tmp[i] = dist_binary(mt);
+        }
+        for (int i = 0; i < n_dim/32; i++)
+            ints2bits(b(i,j), &tmp[i*32]);
+    }
 
 
     // -> make 'b' column 30 similiar as 'a' column 4
-    std::copy(a.memptr(4), a.memptr(4) + n_dim, b.memptr(30));
-    b(0, 30) = !a(0, 30);
-    b(50, 30) = !a(50, 30);
-    b(100, 30) = !a(100, 30);
-    b(200, 30) = !a(200, 30);
+    std::copy(a.memptr(4), a.memptr(4) + n_dim/32, b.memptr(30));
+    b(0, 30) = !a(0, 4);
 }
 
-void bits2ints(int &bits, int *ints) {
+static void ints2bits(int &bits, int *ints) {
+    bits = ints[0]
+    + (ints[1] << 1)
+    + (ints[2] << 2)
+    + (ints[3] << 3)
+    + (ints[4] << 4)
+    + (ints[5] << 5)
+    + (ints[6] << 6)
+    + (ints[7] << 7)
+    + (ints[8] << 8)
+    + (ints[9] << 9)
+    + (ints[10] << 10)
+    + (ints[11] << 11)
+    + (ints[12] << 12)
+    + (ints[13] << 13)
+    + (ints[14] << 14)
+    + (ints[15] << 15)
+    + (ints[16] << 16)
+    + (ints[17] << 17)
+    + (ints[18] << 18)
+    + (ints[19] << 19)
+    + (ints[20] << 20)
+    + (ints[21] << 21)
+    + (ints[22] << 22)
+    + (ints[23] << 23)
+    + (ints[24] << 24)
+    + (ints[25] << 25)
+    + (ints[26] << 26)
+    + (ints[27] << 27)
+    + (ints[28] << 28)
+    + (ints[29] << 29)
+    + (ints[30] << 30)
+    + (ints[31] << 31)
+    ;
+}
+
+
+static void bits2ints(int &bits, int *ints) {
     ints[0] = (bits & (1<<0)) >> 0;
     ints[1] = (bits & (1<<1)) >> 1;
     ints[2] = (bits & (1<<2)) >> 2;

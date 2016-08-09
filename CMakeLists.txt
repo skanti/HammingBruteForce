@@ -28,12 +28,14 @@ add_executable(HamingBruteForceExample example/main.cpp example/Timer.h)
 target_link_libraries(HamingBruteForceExample HamingBruteForce)
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/build/MathKernels.o
+        PRE_BUILD
         COMMAND ispc -O2 --arch=x86-64 --target=avx2 --opt=fast-math ./src/MathKernels.ispc -o ./build/MathKernels.o
         MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/src/MathKernels.ispc
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/create_synthethic_data.h
+        PRE_BUILD
         COMMAND m4 ${USER_DEFINES} ${CMAKE_CURRENT_SOURCE_DIR}/src/create_synthethic_data.m4 > $@
         MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/src/create_synthethic_data.m4
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
