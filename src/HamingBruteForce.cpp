@@ -15,7 +15,7 @@ void HamingBruteForce<T>::match_all(const T *a, int n_size_a, const T *b, int n_
         for (int j = 0; j < n_size_b; j++) {
             int d_ab = 0;
             for (int k = 0; k < ld; k++)
-                d_ab += __builtin_popcountl(a[i * ld + k] ^ b[j * ld + k]);
+                d_ab += _popcnt64(a[i * ld + k] ^ b[j * ld + k]);
             //std::cout << std::bitset<64>(d_ab)
             int is_closer = d_ab < distance_ab[i];
             index_ab[i] = is_closer ? j : index_ab[i];
