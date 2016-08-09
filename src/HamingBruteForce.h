@@ -5,6 +5,7 @@
 #include "AlignedAllocator.h"
 #include <cassert>
 
+
 template<typename T>
 class HamingBruteForce {
 public:
@@ -20,6 +21,7 @@ public:
 
     int n_size_reserve;
     int n_dim;
+    const int size_bit_haming = sizeof(T) * 8;
     int threshold;
     ivec index_ab;
     ivec distance_ab;
