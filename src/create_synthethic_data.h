@@ -16,21 +16,22 @@ void create_syntethic_data(Matrix<T> &a, int n_size_a, Matrix<T> &b, int n_size_
         for (int i = 0; i < n_dim; i++) {
             tmp[i] = dist_binary(mt);
         }
-        for (int i = 0; i < n_dim/64; i++)
-            ints2bits(a(i,j), &tmp[i*64]);
+        for (int i = 0; i < n_dim/SIZE_BITS_HAMING; i++)
+            ints2bits(a(i,j), &tmp[i*SIZE_BITS_HAMING]);
     }
     for (int j = 0; j < n_size_b; j++) {
         for (int i = 0; i < n_dim; i++) {
             tmp[i] = dist_binary(mt);
         }
-        for (int i = 0; i < n_dim/64; i++)
-            ints2bits(b(i,j), &tmp[i*64]);
+        for (int i = 0; i < n_dim/SIZE_BITS_HAMING; i++)
+            ints2bits(b(i,j), &tmp[i*SIZE_BITS_HAMING]);
     }
 
 
     // -> make 'b' column 30 similiar as 'a' column 4
-    std::copy(a.memptr(4), a.memptr(4) + n_dim/64, b.memptr(30));
-    b(0, 30) = !a(0, 4);
+    //std::copy(a.memptr(4), a.memptr(4) + n_dim/64, b.memptr(30));
+    memcpy(b.memptr(30), a.memptr(4), n_dim/8);
+    b(0, 30) = ~a(0, 4);
 }
 
 static void ints2bits(int64_t &bits, int64_t *ints) {
