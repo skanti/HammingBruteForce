@@ -7,7 +7,6 @@
 
 
 
-
 template<typename T>
 void HamingBruteForce<T>::match_all(const T *a, int n_size_a, const T *b, int n_size_b) {
     int ld = n_dim / 64;
@@ -19,14 +18,13 @@ void HamingBruteForce<T>::match_all(const T *a, int n_size_a, const T *b, int n_
             int d_ab_3 = _popcnt64 (a[i * ld + 3] ^ b[j * ld + 3]);
             int d_ab_4 = _popcnt64 (a[i * ld + 4] ^ b[j * ld + 4]);
             
-            int d_ab = d_ab_0 + + d_ab_0 + d_ab_1 + d_ab_2 + d_ab_3 + d_ab_4 ;
+            int d_ab = d_ab_0 + d_ab_0 + d_ab_1 + d_ab_2 + d_ab_3 + d_ab_4 ;
             int is_closer = d_ab < distance_ab[i];
             index_ab[i] = is_closer ? j : index_ab[i];
             distance_ab[i] = is_closer ? d_ab : distance_ab[i];
         }
     }
 }
-
 
 template<typename T>
 void create_syntethic_data(Matrix<T> &a, int n_size_a, Matrix<T> &b, int n_size_b, int n_dim) {
