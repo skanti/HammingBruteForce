@@ -5,6 +5,10 @@
 #include "AlignedAllocator.h"
 #include <cassert>
 
+#ifndef SIZE_BITS_HAMING
+#error Define SIZE_BITS_HAMING a-priori
+#endif
+
 
 template<typename T>
 class HamingBruteForce {
@@ -13,11 +17,8 @@ public:
 
     HamingBruteForce(int n_size_reserve_, int n_dim_, int threshold);
 
-    void match(const T *a, int i_a, int n_size_a, const T *b, int i_b, int n_size_b);
-
     void match_all(const T *a, int n_size_a, const T *b, int n_size_b);
 
-    static int hamming_distance(const T *a, const T *b, const int n);
 
     int n_size_reserve;
     int n_dim;
