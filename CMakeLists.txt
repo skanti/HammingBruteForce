@@ -11,7 +11,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
 
 
 set(SOURCE_FILES_CPP
-        ./src/HamingBruteForce.cpp)
+        src/HamingBruteForce.cpp)
 
 set(SOURCE_FILES_H
         src/MathKernels.h
@@ -32,4 +32,12 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/MathKernels.h
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT ${USER_DEFINES})
 
-set_source_files_properties(src/MathKernels.h PROPERTIES EXTERNAL_OBJECT true GENERATED true)
+
+add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/HamingBruteForce.cpp
+        PRE_BUILD
+        COMMAND m4 -DSIZE_BITS_HAMING=64 -DN_THREADS=4 ${CMAKE_CURRENT_SOURCE_DIR}/src/HamingBruteForce.m4 > $@
+        MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/src/HamingBruteForce.m4
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT ${USER_DEFINES})
+
+set_source_files_properties(src/HamingBruteForce.cpp src/MathKernels.h PROPERTIES GENERATED true)
