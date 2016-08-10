@@ -16,10 +16,10 @@ void HamingBruteForce<T>::match_all(const T *a, int n_size_a, const  T *b, int n
     int ld = n_dim / SIZE_BITS_HAMING;
     for (int i = 0; i < n_size_a; i++) {
         for (int j = 0; j < n_size_b; j++) {
-            forloop(k, 0, eval(256/SIZE_BITS_HAMING),
+            forloop(k, 0, eval(256/SIZE_BITS_HAMING - 1 ),
                 int `m4_var(d_ab,k)' = popcount_x (a[i * ld + `k'] ^ b[j * ld + `k']);
             )
-            int d_ab = d_ab_0 forloop(k, 0, eval(256/SIZE_BITS_HAMING), + `m4_var(d_ab,k)' );
+            int d_ab = d_ab_0 forloop(k, 0, eval(256/SIZE_BITS_HAMING - 1), + `m4_var(d_ab,k)' );
             int is_closer = d_ab < distance_ab[i];
             index_ab[i] = is_closer ? j : index_ab[i];
             distance_ab[i] = is_closer ? d_ab : distance_ab[i];
