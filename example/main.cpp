@@ -62,14 +62,12 @@ int main() {
         }
     }
     // <-
-    /*
     // -> print
     for (int i = 0; i < n_size_a; i++) {
         if (distance_ab[i] < 90)
             std::cout << "i: " << i << " j: " << index_ab[i] << " d: " << distance_ab[i] << std::endl;
     }
     // <-
-    */
     for (int i = 0; i < N_THREADS; i++) {
         delete ai[i];
         delete bi[i];
