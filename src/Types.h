@@ -4,7 +4,7 @@
 #include "AlignedAllocator.h"
 #include <vector>
 
-template<typename T, typename A = AlignedAllocator<T, 32>>
+template<typename T, typename A = AlignedAllocator<T, 64>>
 struct Matrix {
     Matrix(int n_rows_, int n_cols_) : n_rows(n_rows_), n_cols(n_cols_), data(n_rows * n_cols) {};
 
@@ -16,6 +16,6 @@ struct Matrix {
     std::vector<T, A> data;
 };
 
-template class Matrix<int>;
-template class Matrix<unsigned char>;
+template class Matrix<int32_t>;
+template class Matrix<int64_t>;
 #endif //HAMINGBRUTEFORCE_TYPES_H
