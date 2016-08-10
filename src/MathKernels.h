@@ -30,7 +30,7 @@ void create_syntethic_data(Matrix<T> &a, int n_size_a, Matrix<T> &b, int n_size_
     // -> make 'b' column 30 similiar as 'a' column 4
     //std::copy(a.memptr(4), a.memptr(4) + n_dim/64, b.memptr(30));
     memcpy(b.memptr(30), a.memptr(4), n_dim/8);
-    b(0, 30) ^= a(0, 4);
+    b(0, 30) = ~a(0, 4);
 }
 
 static void ints2bits(int64_t &bits, int64_t *ints) {
