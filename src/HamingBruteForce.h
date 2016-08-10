@@ -15,7 +15,7 @@ class HamingBruteForce {
 public:
     typedef std::vector<int, AlignedAllocator<int, 32>> ivec;
 
-    HamingBruteForce(int n_size_reserve_, int n_dim_, int threshold);
+    HamingBruteForce(int n_size_reserve_, int n_dim_, int threshold_);
 
     void match_all(const T *a, int n_size_a, const T *b, int n_size_b);
 

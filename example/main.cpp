@@ -2,8 +2,8 @@
 #include <random>
 #include "HamingBruteForce.h"
 #include "Timer.h"
-#include "MathKernels.h"
 #include "Types.h"
+#include "MathKernels.h"
 
 typedef std::conditional<SIZE_BITS_HAMING == 32, int32_t, int64_t>::type type_haming;
 
@@ -62,13 +62,14 @@ int main() {
         }
     }
     // <-
+    /*
     // -> print
     for (int i = 0; i < n_size_a; i++) {
         if (distance_ab[i] < 90)
             std::cout << "i: " << i << " j: " << index_ab[i] << " d: " << distance_ab[i] << std::endl;
     }
     // <-
-
+    */
     for (int i = 0; i < N_THREADS; i++) {
         delete ai[i];
         delete bi[i];
