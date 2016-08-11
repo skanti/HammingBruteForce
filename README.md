@@ -29,7 +29,7 @@ as opposed to the 8-bit strategy of OpenCV.
 ## Dependencies
 - m4 (macro pre-processor)
 
-# How-To Install
+## How-To Install
 Have a look at the CMake file. Just run it with your individual paths.
 
 ## Contact
