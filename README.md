@@ -1,5 +1,5 @@
 # Haming-Brute-Force
-A fast 64-bit Brute-Force Method to Match 256-bit Binary Descriptors by the Closest Haming Distance. This is 
+A fast 64-bit Brute-Force Method to Match 256-bit Binary Descriptors by the Closest Haming Distance.
 
 ## Description
 
