@@ -7,10 +7,14 @@
 
 #ifndef N_DIM_BINARYDESCRIPTOR
 #define N_DIM_BINARYDESCRIPTOR 256
+#elif (N_DIM_BINARYDESCRIPTOR != 256)
+#error N_DIM_BINARYDESCRIPTOR has unsupported value (256 supported only).
 #endif
 
 #ifndef SIZE_BITS_HAMING
 #define SIZE_BITS_HAMING 64
+#elif (SIZE_BITS_HAMING != 64)
+#error SIZE_BITS_HAMING has unsupported value (64 supported only).
 #endif
 
 class HamingBruteForce {
