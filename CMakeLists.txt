@@ -14,9 +14,9 @@ set(SOURCE_FILES_CPP
         src/HamingBruteForce.cpp)
 
 set(SOURCE_FILES_H
+        src/AlignedAllocator.h
         src/MathKernels.h
         src/HamingBruteForce.h
-        src/AlignedAllocator.h
         src/Types.h)
 
 include_directories(./src)
@@ -33,11 +33,4 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/MathKernels.h
         COMMENT ${USER_DEFINES})
 
 
-add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/HamingBruteForce.cpp
-        PRE_BUILD
-        COMMAND m4 -DSIZE_BITS_HAMING=64 -DN_THREADS=4 ${CMAKE_CURRENT_SOURCE_DIR}/src/HamingBruteForce.m4 > $@
-        MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/src/HamingBruteForce.m4
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMENT ${USER_DEFINES})
-
-set_source_files_properties(src/HamingBruteForce.cpp src/MathKernels.h PROPERTIES GENERATED true)
+set_source_files_properties(src/MathKernels.h PROPERTIES GENERATED true)

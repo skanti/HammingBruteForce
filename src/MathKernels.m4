@@ -1,8 +1,8 @@
 include(`./src/Unroll.m4')
 #include "Types.h"
 
-define(intx_t,`ifelse(SIZE_BITS_HAMING,32, int32_t, int64_t)')
-define(intx_suffix,`ifelse(SIZE_BITS_HAMING,32,,L)')
+define(intx_t,`ifelse(SIZE_BITS_HAMING,64, int64_t,)')
+define(intx_suffix,`ifelse(SIZE_BITS_HAMING,64,L,)')
 
 template<typename T>
 void create_syntethic_data(Matrix<T> &a, int n_size_a, Matrix<T> &b, int n_size_b, int n_dim) {

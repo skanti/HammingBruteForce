@@ -5,11 +5,6 @@
 #include "Types.h"
 #include "MathKernels.h"
 
-typedef std::conditional<SIZE_BITS_HAMING == 32, int32_t, int64_t>::type type_haming;
-
-extern "C" void match_all_ispc(const unsigned char *a, int n_size_a, const unsigned char *b, int n_size_b,
-                               int n_dim, int *index_ab, int *distance_ab);
-
 int main() {
     // -> setup
     int n_dim = 256;
@@ -20,26 +15,26 @@ int main() {
     // <-
 
     // -> root arrays
-    Matrix<type_haming> a(n_dim_vec, n_size_a);
-    Matrix<type_haming> b(n_dim_vec, n_size_b);
+    Matrix<int64_t> a(n_dim_vec, n_size_a);
+    Matrix<int64_t> b(n_dim_vec, n_size_b);
     // <-
-    create_syntethic_data<type_haming>(a, n_size_a, b, n_size_b, n_dim); // <- fill with made up values
+    create_syntethic_data<int64_t>(a, n_size_a, b, n_size_b, n_dim); // <- fill with made up values
 
     // -> scatter thread data and schedule
     int n_size_a_ti = n_size_a / N_THREADS;
     int n_size_b_ti = n_size_b / N_THREADS;
     int ld_a = n_dim_vec * n_size_a_ti;
     int ld_b = n_dim_vec * n_size_a_ti;
-    std::vector<Matrix<type_haming> *> ai(N_THREADS);
-    std::vector<Matrix<type_haming> *> bi(N_THREADS);
-    std::vector<HamingBruteForce<type_haming> *> hbf(N_THREADS);
+    std::vector<Matrix<int64_t> *> ai(N_THREADS);
+    std::vector<Matrix<int64_t> *> bi(N_THREADS);
+    std::vector<HamingBruteForce *> hbf(N_THREADS);
 
     for (int i = 0; i < N_THREADS; i++) {
-        ai[i] = new Matrix<type_haming>(n_dim_vec, n_size_a_ti);
+        ai[i] = new Matrix<int64_t>(n_dim_vec, n_size_a_ti);
         std::copy(a.memptr() + ld_a * i, a.memptr() + ld_a * (i + 1), ai[i]->memptr());
-        bi[i] = new Matrix<type_haming>(n_dim_vec, n_size_b_ti);
+        bi[i] = new Matrix<int64_t>(n_dim_vec, n_size_b_ti);
         std::copy(b.memptr() + ld_b * i, b.memptr() + ld_b * (i + 1), bi[i]->memptr());
-        hbf[i] = new HamingBruteForce<type_haming>(512, n_dim, 100);
+        hbf[i] = new HamingBruteForce(512, 100);
     }
     // <-
     // -> start actual haming brute forcing
