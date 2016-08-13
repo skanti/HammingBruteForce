@@ -4,68 +4,86 @@
 #include "Timer.h"
 #include "Types.h"
 #include "MathKernels.h"
+#include <stdlib.h>
+
+#define PI 3.14159265359
+
+struct Corners {
+    int x, y;
+    float angle;
+};
+
+void create_synthetic_corners(Corners *corners, int n_features, int seed) {
+    std::mt19937 mt(seed);
+    std::uniform_real_distribution<float> u_dist(0, 1);
+    for (int i = 0; i < n_features; i++) {
+        corners[i].x = (int) (u_dist(mt) * 640);
+        corners[i].y = (int) (u_dist(mt) * 480);
+        corners[i].angle = (float) (u_dist(mt) * PI);
+    }
+}
+
+void create_synthetic_data(Matrix<int64_t> &a, int n_size_a, Matrix<int64_t> &b, int n_size_b) {
+    std::mt19937 mt(999);
+    std::bernoulli_distribution dist_binary(0.5);
+    std::vector<int64_t> tmp(256);
+    for (int j = 0; j < n_size_a; j++) {
+        for (int i = 0; i < 256; i++) {
+            tmp[i] = dist_binary(mt);
+        }
+        for (int i = 0; i < 4; i++)
+            ints2bits(a(i, j), &tmp[i * SIZE_BITS_HAMING]);
+    }
+    for (int j = 0; j < n_size_b; j++) {
+        for (int i = 0; i < 256; i++) {
+            tmp[i] = dist_binary(mt);
+        }
+        for (int i = 0; i < 4; i++)
+            ints2bits(b(i, j), &tmp[i * SIZE_BITS_HAMING]);
+    }
+
+    // -> make 'b' column 30 similiar as 'a' column 4
+    //std::copy(a.memptr(4), a.memptr(4) + n_dim/64, b.memptr(30));
+    memcpy(b.memptr(30), a.memptr(4), 256 / 8);
+    b(0, 30) = ~a(0, 4);
+}
+
 
 int main() {
     // -> setup
-    int n_dim = 256;
-    int n_dim_vec = n_dim / SIZE_BITS_HAMING;
     int n_size_a = 500;
     int n_size_b = 500;
-    assert(n_size_a % N_THREADS == 0 && n_size_b % N_THREADS == 0);
     // <-
 
     // -> root arrays
-    Matrix<int64_t> a(n_dim_vec, n_size_a);
-    Matrix<int64_t> b(n_dim_vec, n_size_b);
+    Matrix<int64_t> a(4, n_size_a);
+    Matrix<int64_t> b(4, n_size_b);
+    std::vector<Corners> corners_a(n_size_a);
+    std::vector<Corners> corners_b(n_size_b);
     // <-
-    create_syntethic_data<int64_t>(a, n_size_a, b, n_size_b, n_dim); // <- fill with made up values
 
-    // -> scatter thread data and schedule
-    int n_size_a_ti = n_size_a / N_THREADS;
-    int n_size_b_ti = n_size_b / N_THREADS;
-    int ld_a = n_dim_vec * n_size_a_ti;
-    int ld_b = n_dim_vec * n_size_a_ti;
-    std::vector<Matrix<int64_t> *> ai(N_THREADS);
-    std::vector<Matrix<int64_t> *> bi(N_THREADS);
-    std::vector<HamingBruteForce *> hbf(N_THREADS);
+    create_synthetic_data(a, n_size_a, b, n_size_b); // <- fill with made up values
+    create_synthetic_corners(corners_a.data(), n_size_a, 999); // <- fill with made up values
+    create_synthetic_corners(corners_b.data(), n_size_b, 42); // <- fill with made up values
 
-    for (int i = 0; i < N_THREADS; i++) {
-        ai[i] = new Matrix<int64_t>(n_dim_vec, n_size_a_ti);
-        std::copy(a.memptr() + ld_a * i, a.memptr() + ld_a * (i + 1), ai[i]->memptr());
-        bi[i] = new Matrix<int64_t>(n_dim_vec, n_size_b_ti);
-        std::copy(b.memptr() + ld_b * i, b.memptr() + ld_b * (i + 1), bi[i]->memptr());
-        hbf[i] = new HamingBruteForce(512, 100);
-    }
-    // <-
+    HamingBruteForce hbf(512, 100);
     // -> start actual haming brute forcing
     Timer::start();
-    for (int i = 0; i < N_THREADS; i++) {
-        hbf[i]->match_all(ai[i]->memptr(), n_size_a_ti, bi[i]->memptr(), n_size_b_ti);
-    }
-
+    hbf.match_all(a.memptr(), n_size_a, b.memptr(), n_size_b);
     Timer::stop();
-    std::cout << "timing (ms): " << Timer::get_timing_in_ms() << std::endl;
+    std::cout << "match_all: timing (ms): " << Timer::get_timing_in_ms() << std::endl;
+
+    Timer::start();
+    hbf.refine_distance(corners_a.data(), corners_b.data(), n_size_a, 40, PI / 4);
+    Timer::stop();
+    std::cout << "refine: timing (ms): " << Timer::get_timing_in_ms() << std::endl;
+
     // <-
 
-    // -> gather thread data to single file
-    std::vector<int> index_ab(512, -1);
-    std::vector<int> distance_ab(512, 100);
-    for (int i = 0; i < N_THREADS; i++) {
-        for (int j = 0; j < n_size_a_ti; j++) {
-            index_ab[i * n_size_a_ti + j] = hbf[i]->index_ab[j] + i * n_size_a_ti;
-            distance_ab[i * n_size_a_ti + j] = hbf[i]->distance_ab[j];
-        }
-    }
-    // <-
     // -> print
     for (int i = 0; i < n_size_a; i++) {
-        if (distance_ab[i] < 90)
-            std::cout << "i: " << i << " j: " << index_ab[i] << " d: " << distance_ab[i] << std::endl;
+        if (hbf.distance_ab[i] < 90)
+            std::cout << "i: " << i << " j: " << hbf.index_ab[i] << " d: " << hbf.distance_ab[i] << std::endl;
     }
     // <-
-    for (int i = 0; i < N_THREADS; i++) {
-        delete ai[i];
-        delete bi[i];
-        delete hbf[i];
-    }
 }
