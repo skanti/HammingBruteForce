@@ -1,9 +1,8 @@
-#ifndef HAMINGBRUTEFORCE_TYPES_H
-#define HAMINGBRUTEFORCE_TYPES_H
-
+#pragma once
 #include <stdlib.h>
+#include <cstdint>
 
-template<typename T, int A = 64>
+template<typename T, int A = 16>
 struct Matrix {
     Matrix(int n_rows_, int n_cols_) : n_rows(n_rows_), n_cols(n_cols_) {
         posix_memalign((void **) &data, A, n_rows * n_cols * sizeof(T));
@@ -27,4 +26,9 @@ class Matrix<int32_t>;
 template
 class Matrix<int64_t>;
 
-#endif //HAMINGBRUTEFORCE_TYPES_H
+template
+class Matrix<uint32_t>;
+
+template
+class Matrix<uint64_t>;
+

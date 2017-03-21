@@ -5,6 +5,8 @@
 #include "Types.h"
 #include "MathKernels.h"
 #include <stdlib.h>
+#include <cstring>
+#include <bitset>
 
 #define PI 3.14159265359
 
@@ -43,16 +45,16 @@ void create_synthetic_data(Matrix<int64_t> &a, int n_size_a, Matrix<int64_t> &b,
     }
 
     // -> make 'b' column 30 similiar as 'a' column 4
-    //std::copy(a.memptr(4), a.memptr(4) + n_dim/64, b.memptr(30));
-    memcpy(b.memptr(30), a.memptr(4), 256 / 8);
+    std::copy(a.memptr(4), a.memptr(4) + 4, b.memptr(30));
+    // std::memcpy(b.memptr(30), a.memptr(4), 256 / 8);
     b(0, 30) = ~a(0, 4);
 }
 
 
 int main() {
     // -> setup
-    int n_size_a = 500;
-    int n_size_b = 500;
+    int n_size_a = 1 << 13;
+    int n_size_b = 1 << 13;
     // <-
 
     // -> root arrays
@@ -63,26 +65,19 @@ int main() {
     // <-
 
     create_synthetic_data(a, n_size_a, b, n_size_b); // <- fill with made up values
-    create_synthetic_corners(corners_a.data(), n_size_a, 999); // <- fill with made up values
-    create_synthetic_corners(corners_b.data(), n_size_b, 42); // <- fill with made up values
 
-    HamingBruteForce hbf(512, 100);
+    HamingBruteForce hbf(1 << 14, 100);
+
     // -> start actual haming brute forcing
     Timer::start();
     hbf.match_all(a.memptr(), n_size_a, b.memptr(), n_size_b);
     Timer::stop();
-    std::cout << "match_all: timing (ms): " << Timer::get_timing_in_ms() << std::endl;
-
-    Timer::start();
-    hbf.refine_distance(corners_a.data(), corners_b.data(), n_size_a, 40, PI / 4);
-    Timer::stop();
-    std::cout << "refine: timing (ms): " << Timer::get_timing_in_ms() << std::endl;
-
+    std::cout << "hamming matching timing (ms): " << Timer::get_timing_in_ms() << std::endl;
     // <-
 
     // -> print
     for (int i = 0; i < n_size_a; i++) {
-        if (hbf.distance_ab[i] < 90)
+        if (hbf.distance_ab[i] < 88)
             std::cout << "i: " << i << " j: " << hbf.index_ab[i] << " d: " << hbf.distance_ab[i] << std::endl;
     }
     // <-
