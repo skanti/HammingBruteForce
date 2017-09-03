@@ -19,15 +19,17 @@
 
 class HamingBruteForce {
 public:
+	
+	HamingBruteForce();
+	
+	~HamingBruteForce();
 
-    HamingBruteForce(int32_t n_size_reserve_, int32_t threshold_);
+    void init(int32_t threshold_, int32_t n_reserve_);
 
-    ~HamingBruteForce();
-
-    void match_all(const int64_t *a, int n_size_a, const int64_t *b, int n_size_b);
+    void match_all(const int64_t *a, int n_a, const int64_t *b, int n_b);
 
     const int n_dim_vec = N_DIM_BINARYDESCRIPTOR / SIZE_BITS_HAMING; // <-- N_DIM_BINARYDESCRIPTOR/SIZE_BITS_HAMING = 4
-    int n_size_reserve;
+    int n_reserve;
     int threshold;
     int32_t* index_ab;
     int32_t* distance_ab;

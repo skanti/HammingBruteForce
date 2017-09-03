@@ -8,8 +8,12 @@ struct Matrix {
         posix_memalign((void **) &data, A, n_rows * n_cols * sizeof(T));
     };
 
+    Matrix() {
+		data = 0;
+	}
+
     ~Matrix() {
-        free((void *) data);
+        if (data) free(data);
     }
 
     inline T *memptr(int j = 0) { return data + j * n_rows; }

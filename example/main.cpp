@@ -10,21 +10,6 @@
 
 #define PI 3.14159265359
 
-struct Corners {
-    int x, y;
-    float angle;
-};
-
-void create_synthetic_corners(Corners *corners, int n_features, int seed) {
-    std::mt19937 mt(seed);
-    std::uniform_real_distribution<float> u_dist(0, 1);
-    for (int i = 0; i < n_features; i++) {
-        corners[i].x = (int) (u_dist(mt) * 640);
-        corners[i].y = (int) (u_dist(mt) * 480);
-        corners[i].angle = (float) (u_dist(mt) * PI);
-    }
-}
-
 void create_synthetic_data(Matrix<int64_t> &a, int n_size_a, Matrix<int64_t> &b, int n_size_b) {
     std::mt19937 mt(999);
     std::bernoulli_distribution dist_binary(0.5);
@@ -60,13 +45,12 @@ int main() {
     // -> root arrays
     Matrix<int64_t> a(4, n_size_a);
     Matrix<int64_t> b(4, n_size_b);
-    std::vector<Corners> corners_a(n_size_a);
-    std::vector<Corners> corners_b(n_size_b);
     // <-
 
     create_synthetic_data(a, n_size_a, b, n_size_b); // <- fill with made up values
 
-    HamingBruteForce hbf(1 << 14, 100);
+    HamingBruteForce hbf;
+	hbf.init(100, 1 << 14);
 
     // -> start actual haming brute forcing
     Timer::start();

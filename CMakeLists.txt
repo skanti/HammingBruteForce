@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 3.0)
 project(HamingBruteForce CXX)
 
-set(USER_DEFINES "-DSIZE_BITS_HAMING=64 -DN_THREADS=4")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msse4 -Wall -std=c++14 ${USER_DEFINES}")
+# -> required packages
+find_package(Eigen3 3.3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+# <-
+
+set(CMAKE_CXX_COMPILER "c++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unused-result -O3 -msse4 -Wall -std=c++14 -DSIZE_BITS_HAMING=64")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
