@@ -1,6 +1,6 @@
 #include <iostream>
 #include <random>
-#include "HamingBruteForce.h"
+#include "HammingBruteForce.h"
 #include "Timer.h"
 #include "Types.h"
 #include "MathKernels.h"
@@ -49,20 +49,20 @@ int main() {
 
     create_synthetic_data(a, n_size_a, b, n_size_b); // <- fill with made up values
 
-    HamingBruteForce hbf;
-	hbf.init(100, 1 << 14);
+    HammingBruteForce hamming;
+	hamming.init(100, 1 << 14);
 
     // -> start actual haming brute forcing
     Timer::start();
-    hbf.match_all(a.memptr(), n_size_a, b.memptr(), n_size_b);
+    hamming.match_all(a.memptr(), n_size_a, b.memptr(), n_size_b);
     Timer::stop();
     std::cout << "hamming matching timing (ms): " << Timer::get_timing_in_ms() << std::endl;
     // <-
 
     // -> print
     for (int i = 0; i < n_size_a; i++) {
-        if (hbf.distance_ab[i] < 88)
-            std::cout << "i: " << i << " j: " << hbf.index_ab[i] << " d: " << hbf.distance_ab[i] << std::endl;
+        if (hamming.distance_ab[i] < 88)
+            std::cout << "i: " << i << " j: " << hamming.index_ab[i] << " d: " << hamming.distance_ab[i] << std::endl;
     }
     // <-
 }

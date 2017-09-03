@@ -17,12 +17,12 @@
 #endif
 
 
-class HamingBruteForce {
+class HammingBruteForce {
 public:
 	
-	HamingBruteForce();
+	HammingBruteForce();
 	
-	~HamingBruteForce();
+	~HammingBruteForce();
 
     void init(int32_t threshold_, int32_t n_reserve_);
 

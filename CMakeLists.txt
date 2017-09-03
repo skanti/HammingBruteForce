@@ -14,18 +14,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
 
 
 set(SOURCE_FILES_CPP
-        src/HamingBruteForce.cpp)
+        src/HammingBruteForce.cpp)
 
 set(SOURCE_FILES_H
-        src/MathKernels.h
-        src/HamingBruteForce.h
+        src/HammingBruteForce.h
         src/Types.h)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
-add_library(HamingBruteForce ${SOURCE_FILES_CPP} ${SOURCE_FILES_H})
+add_library(HammingBruteForce ${SOURCE_FILES_CPP} ${SOURCE_FILES_H})
 
-add_executable(HamingBruteForceExample example/main.cpp example/Timer.h)
-target_link_libraries(HamingBruteForceExample HamingBruteForce)
+add_executable(HammingBruteForceExample example/main.cpp example/Timer.h)
+target_link_libraries(HammingBruteForceExample HammingBruteForce)
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/MathKernels.h
         PRE_BUILD
